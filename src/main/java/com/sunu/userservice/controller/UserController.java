@@ -14,8 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user-service/")
 public class UserController {
 
     private Environment env;
@@ -33,7 +36,8 @@ public class UserController {
 
     @GetMapping("health_check")
     public String status(){
-        return "It's Woriking in User Serivice";
+
+        return String.format("It's Woriking in User Serivice on PORT %s", env.getProperty("local.server.port"));
     }
     @GetMapping("welcome")
     public String welcome(){
@@ -53,6 +57,35 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
 
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<ResponseUser>> getUsers(){
+
+        Iterable<UserEntity> userList = userService.getUserByAll();
+
+        List<ResponseUser> result = new ArrayList<>();
+
+        userList.forEach(v -> {
+            result.add(new ModelMapper().map(v, ResponseUser.class));
+        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId){
+
+        UserDto userDto = userService.getUserByUserId();
+
+        List<ResponseUser> result = new ArrayList<>();
+
+        ResponseUser returnValue = new ModelMapper().map(userDto, ResponseUser.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(returnValue);
+
+    }
+
 
 
 }
