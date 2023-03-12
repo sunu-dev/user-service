@@ -4,6 +4,7 @@ server:
 spring:
   jpa:
     defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
       show-sql: true
@@ -11,6 +12,7 @@ spring:
         hibernate.format_sql: true
         hibernate.default_batch_fetch_size: 100
     generate-ddl: true
+
   application:
     name: user-service
   h2:
@@ -31,9 +33,9 @@ eureka:
     fetch-with-eureka : true
     fetch-registry: true
     service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
+      #defaultZone: http://127.0.0.1:8761/eurek
+      defaultZone: http://218.236.12.70:9905/eureka
 
 
 greeting:
   message: Welcome to the Simple E-commerce.
-
